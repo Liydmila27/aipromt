@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Промты для учителей — Чертолыс Л.А.</title>
+    <style>
+        :root {
+            --board-bg: #2b1e15;       /* Тёплый тёмно‑коричневый, как доска */
+            --text-main: #f0e8d5;     /* Кремовый, читаемый на тёмном фоне */
+            --accent-gold: #c5a86d;   /* Золотой акцент */
+            --accent-dark-gold: #9a7f4d;
+            --card-bg: rgba(255, 255, 255, 0.08); /* Полупрозрачные карточки */
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--board-bg);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Типографика */
+        h1, h2, h3 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent-gold);
+        }
+
+        p { margin-bottom: 0.75rem; }
+
+        a { color: var(--accent-gold); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem 1.25rem;
+        }
+
+        /* Шапка */
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 { margin: 0; text-align: center; }
+
+        /* Сетка карточек */
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+
+        @media (min-width: 600px) {
+            .prompts-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .prompts-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .prompt-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent-gold);
+            padding: 1.2rem;
+            border-radius: 6px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .prompt-title {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-desc {
+            color: #d9d2c7;
+            font-size: 0.92rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prompt-text {
+            background: rgba(0,0,0,0.3);
+            padding: 0.8rem;
+            border-radius: 6px;
+            border: 1px dashed var(--accent-dark-gold);
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: #e0d8c8;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: rgba(240, 232, 213, 0.65);
+            font-size: 0.9rem;
+        }
+
+        /* Кнопка копирования (опционально) */
+        .copy-btn {
+            float: right;
+            background: transparent;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: var(--accent-gold);
+            color: var(--board-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Коллекция промтов для учителей</h1>
+            <p style="text-align:center; margin-top:0.5rem; color:rgba(240,232,213,0.7);">
+                Автор: Чертолыс Людмила Александровна
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>Для уроков и подготовки</h2>
+            <div class="prompts-grid">
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: план урока</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Сгенерируй подробный план урока по теме [тема] для [класс] класса. Включи цели, этапы урока, задания для учеников, вопросы для рефлексии и домашнее задание. Уложись в 45 минут.</p>
+                    <div class="prompt-text">Сгенерируй подробный план урока по теме «[тема]» для [класс] класса. Цели: образовательные, развивающие, воспитательные. Этапы: организационный момент, актуализация, изучение нового, практика, рефлексия. Добавь 3 разноуровневых задания и 1 вариант домашнего задания. Формат: нумерованный список по минутам.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: объяснение темы</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Сделай объяснение темы простым языком для учеников [класс], добавь 2–3 жизненных примера и 3 вопроса для проверки понимания.</p>
+                    <div class="prompt-text">Объясни тему «[тема]» так, чтобы понял ученик [класс] класса. Используй не более 3 абзацев. Добавь 2 жизненных примера и 3 вопроса «на понимание» в конце. Тон: дружелюбный, без сложных терминов.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: карточки для повторения</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Создай 10 карточек «вопрос–ответ» по теме для быстрой проверки знаний на уроке.</p>
+                    <div class="prompt-text">Создай 10 карточек для повторения по теме «[тема]». Формат: «Вопрос: … Ответ: …». Уровень: [класс]. Вопросы должны покрывать ключевые понятия и типичные ошибки. Не использу длинные формулировки.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: дифференцированные задания</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Подготовь 3 уровня заданий (базовый, средний, продвинутый) по теме.</p>
+                    <div class="prompt-text">Подготовь 3 задания по теме «[тема]»: базовый уровень (для тех, кто только осваивает), средний (для уверенных), продвинутый (для сильных учеников). Для каждого укажи цель, ожидаемый результат и критерии оценивания. Формат: список с подзаголовками.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: рефлексия и обратная связь</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Придумай 5 вариантов рефлексии для конца урока и шаблон обратной связи для учеников.</p>
+                    <div class="prompt-text">Предложи 5 вариантов короткой рефлексии (1–3 минуты) для конца урока по теме «[тема]». Плюс один шаблон обратной связи от учителя к ученику (3–4 строки). Тон: поддерживающий, конструктивный.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: межпредметная связь</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Покажи, как тема связана с другими предметами, и дай 2–3 идеи для мини‑проекта.</p>
+                    <div class="prompt-text">Покажи связь темы «[тема]» с 2–3 другими предметами (например, литература, биология, история). Дай 3 идеи мини‑проектов (по 30–60 минут) для учеников [класс], где эта связь будет полезна. Формат: короткий список с пояснением 1–2 предложения.</div>
+                </article>
+
+            </div>
+        </section>
+
+        <section style="margin-top:2rem;">
+            <h2>Для методической работы</h2>
+            <div class="prompts-grid">
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: самоанализ урока</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Помоги провести самоанализ урока: сильные стороны, зоны роста, идеи на следующий урок.</p>
+                    <div class="prompt-text">Проведи самоанализ урока по теме «[тема]», [класс], длительность 45 минут. Выдели 3 сильные стороны, 3 зоны роста и 3 идеи на следующий урок. Формат: маркированные списки. Тон: конструктивный, без самокритики.</div>
+                </article>
+
+                <article class="prompt-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="prompt-title">Промт: тезисы для выступления</span>
+                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
+                    </div>
+                    <p class="prompt-desc">Подготовь тезисы для методического выступления на 5–7 минут.</p>
+                    <div class="prompt-text">Подготовь тезисы для методического выступления (5–7 минут) на тему «[тема/опыт]» для коллег‑учителей. Включи 3 ключевых идеи, 2 примера из практики, 1 вывод. Формат: короткие пункты по 1–2 строки.</div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Коллекция промтов для педагогов • Чертолыс Л.А. • 2027 г.</p>
+    </footer>
+
+    <script>
+        function copyText(btn) {
+            const text = btn.parentElement.nextElementSibling.nextElementSibling;
+            const str = text.innerText;
+            navigator.clipboard.writeText(str).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Скопировано';
+                setTimeout(() => btn.innerText = originalText, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
