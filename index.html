@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Библиотека ИИ для учителей — Чертолыс Л.А.</title>
+    <title>Промты для учителей — Чертолыс Л.А.</title>
     <style>
         :root {
-            --board-bg: #2b1e15;       /* Тёплый тёмно-коричневый, как доска */
-            --text-main: #f0e8d5;     /* Кремовый, читаемый на тёмном фоне */
-            --accent-gold: #c5a86d;   /* Золотой акцент */
+            --board-bg: #2b1e15;
+            --text-main: #f0e8d5;
+            --accent-gold: #c5a86d;
             --accent-dark-gold: #9a7f4d;
-            --card-bg: rgba(255, 255, 255, 0.08); /* Полупрозрачные карточки */
+            --card-bg: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.15);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html { overflow-x: hidden; }
+
         body {
-            background-color: var(--board-bg);
+            background: #2b1e15 url('1.png') center / cover no-repeat fixed;
             color: var(--text-main);
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
         }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 20, 12, 0.72);
+            pointer-events: none;
+            z-index: 0;
+        }
+        header, main, footer { position: relative; z-index: 1; }
 
-        /* Типографика */
-        h1, h2, h3 {
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        h1, h2, h3 { text-transform: uppercase; letter-spacing: 1px; }
 
         h1 {
             font-size: 2rem;
@@ -49,33 +57,14 @@
         a { color: var(--accent-gold); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 1rem 1.25rem;
-        }
+        .container { max-width: 960px; margin: 0 auto; padding: 1rem 1.25rem; }
 
-        /* Шапка */
-        header {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
+        header { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
         header h1 { margin: 0; text-align: center; }
 
-        /* Сетка карточек */
-        .prompts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.2rem;
-        }
-
-        @media (min-width: 600px) {
-            .prompts-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 900px) {
-            .prompts-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        .prompts-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+        @media (min-width: 600px) { .prompts-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .prompt-card {
             background: var(--card-bg);
@@ -85,25 +74,15 @@
             border-radius: 6px;
             transition: transform 0.2s, background 0.2s;
         }
+        .prompt-card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.12); }
 
-        .prompt-card:hover {
-            transform: translateY(-2px);
-            background: rgba(255,255,255,0.12);
-        }
+        /* Широкая карточка «Рабочий лист»: вся строка сетки */
+        .prompt-card.wide { grid-column: 1 / -1; }
 
-        .prompt-title {
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
+        .prompt-title { font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        .prompt-desc { color: #d9d2c7; font-size: 0.92rem; margin-bottom: 0.75rem; }
 
-        .prompt-desc {
-            color: #d9d2c7;
-            font-size: 0.92rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .prompt-text {
+        .prompt-text, .copy-text {
             background: rgba(0,0,0,0.3);
             padding: 0.8rem;
             border-radius: 6px;
@@ -123,7 +102,6 @@
             font-size: 0.9rem;
         }
 
-        /* Кнопка копирования */
         .copy-btn {
             float: right;
             background: transparent;
@@ -135,9 +113,108 @@
             font-size: 0.85rem;
             transition: all 0.2s;
         }
-        .copy-btn:hover {
-            background: var(--accent-gold);
-            color: var(--board-bg);
+        .copy-btn:hover { background: var(--accent-gold); color: var(--board-bg); }
+
+        /* ===== Библиотека ИИ-сервисов ===== */
+        .important-plate {
+            border: 1px dashed var(--accent-gold);
+            border-left: 4px solid var(--accent-gold);
+            background: rgba(197, 168, 109, 0.12);
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 12px 0 20px;
+            font-size: 0.98rem;
+        }
+        .important-plate b { color: var(--accent-gold); text-transform: uppercase; letter-spacing: 1px; }
+
+        .lib-panel {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .lib-panel.gold { background: rgba(197, 168, 109, 0.16); border-color: rgba(197, 168, 109, 0.45); }
+        .lib-head {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none;
+        }
+        .lib-head:hover { background: rgba(255,255,255,0.05); }
+        .lib-panel.gold .lib-head:hover { background: rgba(197,168,109,0.12); }
+        .lib-head h3 { margin: 0; font-size: 1.05rem; color: #fff; }
+        .lib-panel.gold .lib-head h3 { color: #f6e7b8; }
+        .lib-intro { padding: 0 18px 10px; color: #d9d2c7; font-size: 0.92rem; }
+        .lib-btn {
+            border: 1px solid var(--accent-gold); color: var(--accent-gold);
+            padding: 0.3rem 0.7rem; border-radius: 4px; font-size: 0.85rem;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .lib-panel.open .lib-btn { background: var(--accent-gold); color: var(--board-bg); }
+        .lib-body { display: none; padding: 0 14px 16px; }
+        .lib-panel.open .lib-body { display: block; }
+        .lib-body p.hint { color: #d9d2c7; font-size: 0.92rem; margin: 8px 0 0; }
+
+        .lib-table-wrap { overflow-x: auto; }
+        table.lib {
+            width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 4px;
+        }
+        table.lib th {
+            background: rgba(197, 168, 109, 0.28);
+            color: #f6e7b8; text-align: left; padding: 8px 10px;
+            border-bottom: 1px solid rgba(197, 168, 109, 0.5);
+            white-space: nowrap;
+        }
+        table.lib td {
+            padding: 8px 10px; vertical-align: top;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            word-break: normal; overflow-wrap: break-word;
+        }
+        table.lib td.svc a { font-weight: 700; }
+        table.lib td.rate { color: var(--accent-gold); font-weight: 600; white-space: nowrap; }
+        @media (max-width: 640px) { table.lib { font-size: 0.8rem; } table.lib th, table.lib td { padding: 6px 6px; } }
+
+        .tips-list { margin: 0.4rem 0 0.8rem 1.1rem; }
+        .tips-list li { margin-bottom: 0.35rem; font-size: 0.93rem; color: #d9d2c7; }
+        .tips-quote {
+            border-left: 3px solid var(--accent-dark-gold);
+            padding: 4px 0 4px 10px; color: #e0d8c8; font-size: 0.9rem; margin-bottom: 0.4rem;
+        }
+
+        /* ===== Золотые парящие плашки (по 2 с каждой стороны) ===== */
+        .motiv {
+            position: fixed; z-index: 30; pointer-events: none;
+            background: linear-gradient(135deg, #f6e2a0, #d8b875 55%, #c5a86d);
+            color: #3a2a10;
+            border: 1px solid #f6e7b8;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-size: 0.85rem; font-weight: 700; line-height: 1.35;
+            max-width: 210px; text-align: center;
+            box-shadow: 0 0 22px rgba(246, 215, 130, 0.65), 0 0 44px rgba(197, 168, 109, 0.35), 0 8px 20px rgba(0,0,0,0.35);
+            text-shadow: 0 0 8px rgba(255, 245, 210, 0.9);
+            animation: bob 6s ease-in-out infinite;
+        }
+        .motiv.m1 { left: 14px; top: 20%; animation-delay: 0s; }
+        .motiv.m2 { left: 18px; bottom: 28%; animation-delay: 1.4s; }
+        .motiv.m3 { right: 14px; top: 24%; animation-delay: 0.7s; }
+        .motiv.m4 { right: 18px; bottom: 32%; animation-delay: 2.1s; }
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-14px); }
+        }
+        @media (max-width: 1200px) {
+            .motiv { max-width: 150px; font-size: 0.75rem; padding: 8px 10px; }
+            .motiv.m1, .motiv.m3 { top: 12%; }
+            .motiv.m2, .motiv.m4 { bottom: 14%; }
+        }
+
+        /* ===== 5.png слева снизу, на переднем плане ===== */
+        .corner-img {
+            position: fixed; left: 16px; bottom: 12px;
+            width: 320px; max-width: 38vw;
+            z-index: 20; pointer-events: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.45);
         }
     </style>
 </head>
@@ -151,100 +228,236 @@
             </p>
         </div>
     </header>
+<main class="container">
+<section>
+<h2>Для уроков и подготовки</h2>
+<div class="prompts-grid">
+<article class="prompt-card wide">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: рабочий лист</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Создай готовый рабочий лист: задания от простого к сложному, памятка, самопроверка и отдельный ключ с ответами и критериями для учителя.</p>
+<div class="prompt-text">Ты — опытный педагог-методист. Создай рабочий лист для учеников [класс] класса по предмету [предмет] на тему «[тема]».
 
-    <main class="container">
-        <section>
-            <h2>Для уроков и подготовки</h2>
-            <div class="prompts-grid">
+Условия:
+— Продолжительность выполнения: [например, 15–20 минут].
+— Цель: [что ученик должен понять или научиться делать].
+— Уровень класса: [начальный / средний / высокий / смешанный].
+— Особенности учеников: [например, разный темп работы, трудности с чтением, сильные ученики].
+— Учебник или программа, если важно: [название УМК или программы].
+— Формат: [для печати на одном листе / для выполнения в электронном виде].
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: план урока</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Сгенерируй подробный план урока по теме [тема] для [класс] класса. Включи цели, этапы урока, задания для учеников, вопросы для рефлексии и домашнее задание. Уложись в 45 минут.</p>
-                    <div class="prompt-text">Сгенерируй подробный план урока по теме «[тема]» для [класс] класса. Цели: образовательные, развивающие, воспитательные. Этапы: организационный момент, актуализация, изучение нового, практика, рефлексия. Добавь 3 разноуровневых задания и 1 вариант домашнего задания. Формат: нумерованный список по минутам.</div>
-                </article>
+Составь рабочий лист со следующими разделами:
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: объяснение темы</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Сделай объяснение темы простым языком для учеников [класс], добавь 2-3 жизненных примера и 3 вопроса для проверки понимания.</p>
-                    <div class="prompt-text">Объясни тему «[тема]» так, чтобы понял ученик [класс] класса. Используй не более 3 абзацев. Добавь 2 жизненных примера и 3 вопроса «на понимание» в конце. Тон: дружелюбный, без сложных терминов.</div>
-                </article>
+1. Заголовок: предмет, тема, класс, поля для имени и даты.
+2. Краткая инструкция ученику — простыми и понятными словами.
+3. Небольшая памятка по теме: основные правила, понятия или алгоритм. Не раскрывай ответы к заданиям.
+4. Задания от простого к более сложному:
+   — 2 задания на проверку основных знаний;
+   — 2 задания на применение правила или способа решения;
+   — 1 задание на объяснение, сравнение или поиск ошибки;
+   — 1 творческое или практическое задание.
+5. Одно дополнительное задание повышенной сложности для тех, кто закончит раньше.
+6. Самопроверка: 2–3 вопроса, помогающих ученику оценить свою работу.
+7. Место для ответов ученика. Если задание требует развёрнутого ответа, оставь достаточно места.
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: карточки для повторения</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Создай 10 карточек «вопрос-ответ» по теме для быстрой проверки знаний на уроке.</p>
-                    <div class="prompt-text">Создай 10 карточек для повторения по теме «[тема]». Формат: «Вопрос: … Ответ: …». Уровень: [класс]. Вопросы должны покрывать ключевые понятия и типичные ошибки. Не используй длинные формулировки.</div>
-                </article>
+Требования к заданиям:
+— Формулируй их однозначно и соответствуй возрасту учеников.
+— Проверяй, чтобы все задания относились к теме и подходили для указанного класса.
+— Не используй факты, даты, формулы и правила, в которых не уверен.
+— Если есть вычисления, проверь правильность условий и ответов.
+— Расположи задания по возрастанию сложности.
+— Не включай личные данные реальных учеников.
+— Не показывай ответы рядом с заданиями.
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: дифференцированные задания</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Подготовь 3 уровня заданий (базовый, средний, продвинутый) по теме.</p>
-                    <div class="prompt-text">Подготовь 3 задания по теме «[тема]»: базовый уровень (для тех, кто только осваивает), средний (для уверенных), продвинутый (для сильных учеников). Для каждого укажи цель, ожидаемый результат и критерии оценивания. Формат: список с подзаголовками.</div>
-                </article>
+После рабочего листа добавь отдельный блок «Ответы и критерии для учителя»:
+— правильные ответы или примерные варианты;
+— краткое решение там, где оно необходимо;
+— критерии оценивания и максимальный балл за каждое задание;
+— примерную шкалу перевода баллов в отметку;
+— отметь задания, где возможны разные правильные ответы.
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: рефлексия и обратная связь</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Придумай 5 вариантов рефлексии для конца урока и шаблон обратной связи для учеников.</p>
-                    <div class="prompt-text">Предложи 5 вариантов короткой рефлексии (1-3 минуты) для конца урока по теме «[тема]». Плюс один шаблон обратной связи от учителя к ученику (3-4 строки). Тон: поддерживающий, конструктивный.</div>
-                </article>
+Оформи результат так, чтобы его можно было сразу скопировать в документ и распечатать. Сначала выдай рабочий лист для ученика, затем отдельный ключ для учителя.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: план урока</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Сгенерируй подробный план урока по теме [тема] для [класс] класса. Включи цели, этапы урока, задания для учеников, вопросы для рефлексии и домашнее задание. Уложись в 45 минут.</p>
+<div class="prompt-text">Сгенерируй подробный план урока по теме «[тема]» для [класс] класса. Цели: образовательные, развивающие, воспитательные. Этапы: организационный момент, актуализация, изучение нового, практика, рефлексия. Добавь 3 разноуровневых задания и 1 вариант домашнего задания. Формат: нумерованный список по минутам.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: объяснение темы</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Сделай объяснение темы простым языком для учеников [класс], добавь 2–3 жизненных примера и 3 вопроса для проверки понимания.</p>
+<div class="prompt-text">Объясни тему «[тема]» так, чтобы понял ученик [класс] класса. Используй не более 3 абзацев. Добавь 2 жизненных примера и 3 вопроса «на понимание» в конце. Тон: дружелюбный, без сложных терминов.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: карточки для повторения</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Создай 10 карточек «вопрос–ответ» по теме для быстрой проверки знаний на уроке.</p>
+<div class="prompt-text">Создай 10 карточек для повторения по теме «[тема]». Формат: «Вопрос: … Ответ: …». Уровень: [класс]. Вопросы должны покрывать ключевые понятия и типичные ошибки. Не используй длинные формулировки.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: дифференцированные задания</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Подготовь 3 уровня заданий (базовый, средний, продвинутый) по теме.</p>
+<div class="prompt-text">Подготовь 3 задания по теме «[тема]»: базовый уровень (для тех, кто только осваивает), средний (для уверенных), продвинутый (для сильных учеников). Для каждого укажи цель, ожидаемый результат и критерии оценивания. Формат: список с подзаголовками.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: рефлексия и обратная связь</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Придумай 5 вариантов рефлексии для конца урока и шаблон обратной связи для учеников.</p>
+<div class="prompt-text">Предложи 5 вариантов короткой рефлексии (1–3 минуты) для конца урока по теме «[тема]». Плюс один шаблон обратной связи от учителя к ученику (3–4 строки). Тон: поддерживающий, конструктивный.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: межпредметная связь</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Покажи, как тема связана с другими предметами, и дай 2–3 идеи для мини-проекта.</p>
+<div class="prompt-text">Покажи связь темы «[тема]» с 2–3 другими предметами (например, литература, биология, история). Дай 3 идеи мини-проектов (по 30–60 минут) для учеников [класс], где эта связь будет полезна. Формат: короткий список с пояснением 1–2 предложения.</div>
+</article>
+</div>
+</section>
 
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: межпредметная связь</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Покажи, как тема связана с другими предметами, и дай 2-3 идеи для мини-проекта.</p>
-                    <div class="prompt-text">Покажи связь темы «[тема]» с 2-3 другими предметами (например, литература, биология, история). Дай 3 идеи мини-проектов (по 30-60 минут) для учеников [класс], где эта связь будет полезна. Формат: короткий список с пояснением 1-2 предложения.</div>
-                </article>
+<section style="margin-top:2rem;">
+<h2>Для методической работы</h2>
+<div class="prompts-grid">
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: самоанализ урока</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Помоги провести самоанализ урока: сильные стороны, зоны роста, идеи на следующий урок.</p>
+<div class="prompt-text">Проведи самоанализ урока по теме «[тема]», [класс], длительность 45 минут. Выдели 3 сильные стороны, 3 зоны роста и 3 идеи на следующий урок. Формат: маркированные списки. Тон: конструктивный, без самокритики.</div>
+</article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Промт: тезисы для выступления</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Подготовь тезисы для методического выступления на 5–7 минут.</p>
+<div class="prompt-text">Подготовь тезисы для методического выступления (5–7 минут) на тему «[тема/опыт]» для коллег-учителей. Включи 3 ключевых идеи, 2 примера из практики, 1 вывод. Формат: короткие пункты по 1–2 строки.</div>
+</article>
+</div>
+</section>
+<section style="margin-top:2.5rem;">
+<h2>Советы учителю: как писать хорошие промпты</h2>
+<p style="color:#d9d2c7;">Промпт — это инструкция для нейросети. Чем яснее вы опишете задачу и условия, тем вероятнее получить полезный результат. Не обязательно сразу писать длинно и идеально: запрос можно уточнять постепенно.</p>
+<div class="prompts-grid" style="margin-top:1rem;">
+<article class="prompt-card">
+<span class="prompt-title">Что включить в запрос</span>
+<ul class="tips-list"><li><b>Задачу</b>: что нужно сделать — составить рабочий лист, объяснить тему, придумать задания.</li><li><b>Контекст</b>: предмет, тема, класс, цель урока.</li><li><b>Аудиторию</b>: возраст, уровень подготовки, особенности группы.</li><li><b>Условия</b>: длительность, количество заданий, сложность, нужные ограничения.</li><li><b>Формат ответа</b>: таблица, список, план по этапам, готовый текст для печати.</li><li><b>Критерии качества</b>: например, «инструкция должна быть понятной ученику», «ответы вынеси отдельно».</li><li><b>Проверку</b>: попросите найти возможные ошибки, неоднозначности и слишком сложные формулировки.</li></ul></article>
+<article class="prompt-card">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<span class="prompt-title">Короткий шаблон</span>
+<button class="copy-btn" onclick="copyText(this)">Копировать</button>
+</div>
+<p class="prompt-desc">Подставьте свои значения — и запрос готов.</p><div class="copy-text">Составь [что именно] по предмету [предмет] на тему [тема] для [класс и уровень учеников]. Цель — [цель]. Учти [условия и особенности]. Оформи ответ как [нужный формат]. Если данных недостаточно, сначала задай мне уточняющие вопросы. В конце проверь результат на [что проверить].</div></article>
+<article class="prompt-card">
+<span class="prompt-title">Если не знаете, чего именно хотите</span>
+<p class="prompt-desc">Начните с описания ситуации, а не с точного задания:</p><div class="tips-quote">«Я готовлю урок по теме «[тема]» для [класс]. Пока не знаю, какой материал лучше сделать. Предложи 5 разных вариантов: например, рабочий лист, игру, практическое задание или мини-тест. Для каждого укажи цель, время подготовки и время выполнения. Пока ничего не создавай — сначала помоги выбрать.»</div><p class="prompt-desc">Затем выберите вариант и попросите подготовить его:</p><div class="tips-quote">«Берём вариант № [номер]. Создай его для [класс], учти [условия]. Оформи в виде [формат]. Ответы и критерии оценивания вынеси отдельно.»</div><p class="prompt-desc">Если неясно даже, в чём затруднение, — попросите помочь разобраться:</p><div class="tips-quote">«Я хочу сделать урок по теме «[тема]», но пока не понимаю, какой материал мне нужен. Задай мне по одному вопросу о цели урока, классе, уровне учеников и времени. После моих ответов предложи несколько подходящих вариантов.»</div></article>
+<article class="prompt-card">
+<span class="prompt-title">Работайте в несколько шагов</span>
+<p class="prompt-desc">Необязательно просить всё сразу. Можно действовать так:</p><ul class="tips-list"><li>попросить предложить идеи;</li><li>выбрать подходящую;</li><li>получить черновик;</li><li>попросить изменить сложность, объём или стиль;</li><li>проверить материал и попросить ключ ответов.</li></ul><p class="prompt-desc">Например:</p><div class="tips-quote">«Сначала предложи три идеи рабочего листа по теме «Дроби» для 5 класса».</div><div class="tips-quote">«Выбери вторую идею и составь черновик на 20 минут».</div><div class="tips-quote">«Упрости инструкции, добавь задание повышенной сложности и вынеси ответы в отдельный блок».</div></article>
+<article class="prompt-card">
+<span class="prompt-title">Полезные фразы для уточнения</span>
+<div class="tips-quote">«Сделай проще и понятнее для учеников [класс]».</div><div class="tips-quote">«Предложи ещё два варианта».</div><div class="tips-quote">«Раздели задания по уровню сложности».</div><div class="tips-quote">«Убери лишнюю теорию, оставь только необходимое».</div><div class="tips-quote">«Не придумывай сведения, которых нет в исходном тексте».</div><div class="tips-quote">«Если данных недостаточно, задай уточняющий вопрос, а не додумывай».</div><div class="tips-quote">«Проверь, нет ли ошибок или двусмысленных формулировок».</div><div class="tips-quote">«Покажи, что именно нужно проверить учителю вручную».</div></article>
+<article class="prompt-card">
+<span class="prompt-title">Что важно помнить</span>
+<ul class="tips-list"><li>Нейросеть может ошибаться в фактах, датах, правилах и ответах — проверяйте материал до урока.</li><li>Не загружайте реальные фамилии учеников, оценки с именами и другие личные сведения. Для примера замените их на условные обозначения.</li><li>Если результат не подходит, не начинайте всё заново: напишите, что именно изменить — например, «меньше текста», «больше практики», «сложнее задания».</li><li>Просите черновик, а не безошибочный готовый материал: окончательная проверка и решение остаются за учителем.</li></ul></article>
+</div>
+</section>
+<section style="margin-top:2.5rem;">
+<h2>Библиотека ИИ-сервисов для учителей</h2>
+<p style="color:#d9d2c7;">Практический справочник основных сервисов, доступных учителю в России, — а не буквально все ИИ-продукты в мире: их слишком много, и тарифы часто меняются.</p>
+<div class="important-plate"><b>Важно:</b> в ИИ-сервисы не стоит загружать фамилии учеников, оценки с именами, медицинские сведения и другие данные, по которым можно определить ребёнка. Результаты генерации проверяйте перед использованием на уроке.</div>
+<div class="lib-panel open">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>Универсальные ИИ-помощники</h3>
+<span class="lib-btn">Свернуть −</span>
+</div>
+<p class="lib-intro">Подходят для планов уроков, объяснений, заданий, писем и черновиков учебных материалов.</p>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Сервис</th><th>Бесплатные возможности</th><th>Платные возможности</th><th>Полезность</th></tr><tr><td class="svc"><a href="https://alice.yandex.ru" target="_blank" rel="noopener">Алиса AI</a></td><td>Помогает составлять и редактировать тексты, планы, объяснения и идеи; работает с английским; может анализировать загруженные документы и изображения; генерирует и редактирует изображения. Бесплатные изображения хранятся ограниченное время; для генерации могут быть очереди.</td><td>Опция «Алиса Плюс» даёт приоритетный доступ, расширенные лимиты некоторых функций, более длительное хранение чатов, скачивание фото и видео без водяного знака, HD-оживление фото и коммерческие права на сгенерированный контент.</td><td class="rate">5/5 — удобна как универсальный помощник; полезна и для текста, и для визуалов.<br/><span style="font-weight:400;color:#d9d2c7;">(alice.yandex.ru)</span></td></tr><tr><td class="svc"><a href="https://giga.chat" target="_blank" rel="noopener">GigaChat</a></td><td>Создаёт и редактирует тексты, объясняет темы, помогает с кодом, генерирует изображения, пишет сказки, стихи и сценарии. Пользовательская версия бесплатна без ограничений по числу запросов; для входа используется Сбер ID.</td><td>Для обычного чата платный тариф не подтверждён в справке. Отдельно существуют решения и API для бизнеса — это не то же самое, что платная подписка для учителя.</td><td class="rate">5/5 — хороший стартовый вариант для планов, заданий и черновиков. Проверяйте факты и ответы задач.<br/><span style="font-weight:400;color:#d9d2c7;">(giga.chat)</span></td></tr></table></div>
+</div>
+</div>
+<div class="lib-panel gold">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>Специализированные ИИ-помощники учителя</h3>
+<span class="lib-btn">Развернуть +</span>
+</div>
+<p class="lib-intro">Их преимущество — готовые сценарии: рабочие листы, проверки по фото, презентации и материалы с учётом класса.</p>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Сервис</th><th>Бесплатные возможности</th><th>Платные возможности</th><th>Полезность</th></tr><tr><td class="svc"><a href="https://infourok.ru" target="_blank" rel="noopener">ИИ-ассистент Инфоурока</a></td><td>При запуске сервис предлагает 1000 стартовых токенов. Есть сценарии для планов и конспектов уроков, тестов, рабочих листов, школьных объявлений, классных часов, характеристик и анализа успеваемости; также доступны инструменты для работы с изображениями и файлами. Разные действия расходуют разное число токенов.</td><td>Можно пополнять токены. В каталоге на момент проверки, например, план урока стоил около 130 токенов, тест — около 880, рабочий лист — около 1300, презентация — около 3230. Стоимость действий смотрите в самом сервисе.</td><td class="rate">4/5 — особенно удобен для школьных материалов и типовой документации; большой расход токенов на некоторые задачи.<br/><span style="font-weight:400;color:#d9d2c7;">(infourok.ru)</span></td></tr><tr><td class="svc"><a href="https://obuchai.com" target="_blank" rel="noopener">Обучай</a></td><td>По официальной странице: без карты доступны 2 генерации, 3 проверки работ по фото и 15 сообщений в чате в день. Сервис создаёт рабочие листы, планы, презентации, тесты, контрольные, игры, карточки и другие материалы; заявлены 70 типов заданий, 65+ предметов и 1–11 классы.</td><td>Подписка «Профи» — от 490 ₽ в месяц. В зависимости от тарифа заявлены от 40 до 200 генераций, от 150 до 1000 проверок работ и увеличенный лимит чата.</td><td class="rate">5/5 — сильный выбор, если часто нужны распечатываемые материалы и проверка работ. Бесплатный лимит лучше сверить перед регистрацией.<br/><span style="font-weight:400;color:#d9d2c7;">(obuchai.com)</span></td></tr><tr><td class="svc"><a href="https://neuroom.ru" target="_blank" rel="noopener">Нейрум</a></td><td>Бесплатно можно создать 3 материала без привязки карты. В числе инструментов — рабочие листы, планы и презентации, контрольные, варианты заданий, проверка работ по фотографии.</td><td>Тарифы: 990 ₽ за месяц, 4490 ₽ за полгода или 6990 ₽ за год; при оплате за год это 583 ₽ в месяц. Тарифы включают токены и дополнительные возможности — например, приоритетную очередь и расширенный экспорт.</td><td class="rate">5/5 — подходит для регулярной подготовки и проверки рукописных работ; оценку ИИ следует считать предварительной и утверждать самостоятельно.<br/><span style="font-weight:400;color:#d9d2c7;">(neuroom.ru)</span></td></tr><tr><td class="svc"><a href="https://education.yandex.ru" target="_blank" rel="noopener">Помощник учителя AI в Яндекс Учебнике</a></td><td>Создаёт планы занятий и контрольных, учебные материалы и проверочные работы; помогает объяснять сложные понятия и проверять домашние задания. На странице есть бесплатные курсы по использованию ИИ для педагогов и учебные материалы для учеников. Нужен Яндекс ID для полного доступа.</td><td>Платных тарифов именно для этих учебных материалов на официальной странице не указано.</td><td class="rate">4/5 — особенно полезен учителям, работающим с платформой и её учебными материалами.<br/><span style="font-weight:400;color:#d9d2c7;">(education.yandex.ru)</span></td></tr></table></div>
+</div>
+</div>
+<div class="lib-panel">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>ИИ для изображений и наглядных материалов</h3>
+<span class="lib-btn">Развернуть +</span>
+</div>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Сервис</th><th>Бесплатные возможности</th><th>Платные возможности</th><th>Полезность</th></tr><tr><td class="svc"><a href="https://alice.yandex.ru" target="_blank" rel="noopener">Генерация изображений в Алисе AI</a></td><td>Картинки создаются по текстовому или голосовому описанию; можно выбрать формат и стиль, запросить несколько вариантов и скачать результат. Возможность загрузить изображение-образец как референс в описанной справке не указана.</td><td>«Алиса Плюс» даёт приоритетную обработку и дополнительные условия для скачивания и использования контента.</td><td class="rate">4/5 — удобно для иллюстраций к заданиям, обложек и визуального начала урока.<br/><span style="font-weight:400;color:#d9d2c7;">(alice.yandex.ru)</span></td></tr><tr><td class="svc"><a href="https://giga.chat" target="_blank" rel="noopener">Генерация изображений в GigaChat</a></td><td>Создание иллюстраций по текстовому запросу доступно в пользовательском сервисе. Можно попросить ИИ предложить визуальную идею к теме, например схему или образ для обсуждения.</td><td>Отдельный платный тариф для обычной генерации изображений в справке пользователя не подтверждён.</td><td class="rate">3/5 — удобно, когда изображение нужно получить в одном диалоге с объяснением или текстом.<br/><span style="font-weight:400;color:#d9d2c7;">(giga.chat)</span></td></tr></table></div>
+</div>
+</div>
+<div class="lib-panel gold">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>Расшифровка и итоги онлайн-встреч</h3>
+<span class="lib-btn">Развернуть +</span>
+</div>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Сервис</th><th>Бесплатные возможности</th><th>Платные возможности</th><th>Полезность</th></tr><tr><td class="svc"><a href="https://kontur.ru/tolk" target="_blank" rel="noopener">Контур.Толк</a></td><td>На бесплатном тарифе «Старт» доступны базовые видеовстречи, но ИИ-расшифровка и краткий пересказ не входят в него. Для знакомства с платными функциями сервис предлагает пробный период — 7 дней.</td><td>На платных тарифах доступны запись и ИИ-расшифровка встреч, краткий пересказ, а на некоторых тарифах — протокол с решениями и задачами. Точная комплектация зависит от тарифа; цены — на странице сервиса.</td><td class="rate">3/5 — полезен для педсоветов, методических встреч и онлайн-консультаций; не стоит включать запись без предупреждения участников.<br/><span style="font-weight:400;color:#d9d2c7;">(kontur.ru)</span></td></tr></table></div>
+</div>
+</div>
+<div class="lib-panel">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>Дополнительная библиотека</h3>
+<span class="lib-btn">Развернуть +</span>
+</div>
+<p class="lib-intro">Сервисы, которые не вошли в основную таблицу. Оценка — насколько инструмент полезен педагогу, а не рейтинг качества самой нейросети. Некоторые позиции — не генеративные ИИ, а образовательные платформы или отдельные ИИ-функции.</p>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Сервис</th><th>Возможности</th><th>Полезность для педагога</th></tr><tr><td class="svc"><a href="https://shedevrum.ai" target="_blank" rel="noopener">Шедеврум</a></td><td>Создаёт изображения, короткие видео и клипы по описанию; генерирует тексты; позволяет публиковать работы и смотреть работы других пользователей. Можно делать иллюстрации, карточки-загадки, визуальные примеры и заготовки для творческих заданий.</td><td class="rate">4/5 — особенно полезен для наглядности и творческих заданий.<br/><span style="font-weight:400;color:#d9d2c7;">(shedevrum.ai)</span></td></tr><tr><td class="svc"><a href="https://fusionbrain.ai" target="_blank" rel="noopener">Kandinsky</a></td><td>Модель для создания изображений по текстовому описанию. В некоторых интерфейсах доступны редактирование и преобразование изображений; конкретный набор функций зависит от точки доступа. Старые сайты и интеграции могут работать по-разному — перед занятием лучше проверить выбранный вход.</td><td class="rate">3/5 — хорош для иллюстраций и визуальных экспериментов, но не заменяет редактор учебных материалов.<br/><span style="font-weight:400;color:#d9d2c7;">(fusionbrain.ai)</span></td></tr><tr><td class="svc"><a href="https://stiva.ai" target="_blank" rel="noopener">STIVA.ai</a></td><td>Агрегатор разных моделей: помогает создавать тексты, изображения, видео, музыку и озвучку. Может пригодиться, когда в одном проекте нужны разные типы контента или хочется сравнить результаты нескольких моделей. Состав каталога меняется.</td><td class="rate">4/5 — широкий набор возможностей, но для обычного плана урока может быть избыточен.<br/><span style="font-weight:400;color:#d9d2c7;">(stiva.ai)</span></td></tr><tr><td class="svc"><a href="https://gerwin.ai" target="_blank" rel="noopener">Gerwin AI</a></td><td>Платформа с моделями и приложениями для работы с текстом, изображениями, видео, музыкой и голосом; доступны генерация и редактирование визуалов, озвучка, отдельные инструменты для видео и фото. Некоторые модели появляются в платном балансе или на отдельных тарифах.</td><td class="rate">4/5 — полезен для мультимедийных материалов; учителю стоит освоить только нужные инструменты, а не весь каталог.<br/><span style="font-weight:400;color:#d9d2c7;">(gerwin.ai)</span></td></tr><tr><td class="svc"><a href="https://dev.visper.tech" target="_blank" rel="noopener">Visper</a></td><td>Создаёт ролики с виртуальным ведущим по тексту или PDF-презентации; позволяет выбирать цифрового персонажа и голос. Может пригодиться для видеоинструкций, объяснений и материалов для самостоятельного изучения. На сайте также описан интерактивный аватар.</td><td class="rate">3/5 — подходит для видео, но для регулярной подготовки уроков не обязателен.<br/><span style="font-weight:400;color:#d9d2c7;">(dev.visper.tech)</span></td></tr><tr><td class="svc"><a href="https://developers.sber.ru" target="_blank" rel="noopener">SaluteSpeech</a></td><td>Технологии распознавания речи и синтеза речи: переводит аудио в текст и текст в озвученное аудио. В основном это API-инструмент, поэтому может потребоваться подключение через приложение или техническую интеграцию, а не просто чат в браузере.</td><td class="rate">3/5 — полезен для расшифровки записей и создания аудиоматериалов; настройка может быть сложнее, чем у обычного онлайн-сервиса.<br/><span style="font-weight:400;color:#d9d2c7;">(developers.sber.ru)</span></td></tr><tr><td class="svc"><a href="https://eduassist.ru" target="_blank" rel="noopener">Ассистент преподавателя</a></td><td>Помогает создавать планы, задания, тесты, презентации и викторины; может работать с загруженным конспектом или учебным материалом. Проверяет письменные работы по критериям, готовит обратную связь, расшифровывает записи уроков и формирует аналитику — например, о распределении времени и речи участников.</td><td class="rate">5/5 — широкий набор функций именно для учителя: от подготовки до анализа урока.<br/><span style="font-weight:400;color:#d9d2c7;">(eduassist.ru)</span></td></tr><tr><td class="svc"><a href="https://sferum.ru" target="_blank" rel="noopener">Помощник ученика в Сферуме в MAX</a></td><td>Тренажёр по ОГЭ, ЕГЭ и ВПР для школьников 5–11-х классов. В чатах также можно расшифровывать полученные голосовые и видеосообщения. Это скорее учебный инструмент и функция мессенджера, а не универсальный генератор материалов для педагога.</td><td class="rate">3/5 — полезен для связи и тренировочных заданий; учителю не заменяет ИИ-ассистента.<br/><span style="font-weight:400;color:#d9d2c7;">(sferum.ru)</span></td></tr><tr><td class="svc"><a href="https://sberclass.ru" target="_blank" rel="noopener">СберКласс</a></td><td>Образовательная платформа с персональными учебными траекториями, разноуровневыми заданиями, учебными материалами и отслеживанием прогресса. Подходит для организации обучения, но в актуальном описании не все функции прямо обозначены как ИИ.</td><td class="rate">3/5 — полезен, если школа работает на платформе; это не просто чат-нейросеть.<br/><span style="font-weight:400;color:#d9d2c7;">(sberclass.ru)</span></td></tr><tr><td class="svc"><a href="https://tbank.ru" target="_blank" rel="noopener">Джуниор-ассистент</a></td><td>Детский помощник: объясняет решение учебных задач по шагам, помогает с финансовой грамотностью, предлагает загадки и игры, сочиняет сказки и поддерживает разговор на разрешённые детям темы.</td><td class="rate">3/5 — скорее дополнительный помощник для ученика, чем инструмент подготовки учителя.<br/><span style="font-weight:400;color:#d9d2c7;">(tbank.ru)</span></td></tr><tr><td class="svc"><a href="https://ispring.ru" target="_blank" rel="noopener">iSpring Suite / iSpring AI</a></td><td>Создаёт электронные курсы, тесты, видеолекции, интерактивные задания и диалоговые тренажёры. ИИ-помощник может подготовить или улучшить текст, упростить формулировки, раскрыть тезисы подробнее, предложить идеи и вопросы для тестов. В первую очередь сервис рассчитан на создание полноценных курсов.</td><td class="rate">4/5 — особенно полезен методистам и педагогам, которые делают электронные курсы; для одного урока может быть сложноват.<br/><span style="font-weight:400;color:#d9d2c7;">(ispring.ru)</span></td></tr><tr><td class="svc"><a href="https://antiplagiat.ru" target="_blank" rel="noopener">Антиплагиат с ИИ-детектором</a></td><td>Проверяет текст на совпадения с источниками и отмечает фрагменты, которые система считает похожими на сгенерированные ИИ. Это инструмент для дополнительного анализа, а не способ достоверно установить авторство: сам сервис указывает, что результат детектора не является окончательным доказательством.</td><td class="rate">2/5 — может помочь при проверке учебных работ, но результат нельзя использовать как единственное основание для вывода или оценки.<br/><span style="font-weight:400;color:#d9d2c7;">(antiplagiat.ru)</span></td></tr><tr><td class="svc"><a href="https://kontur.ru/tolk" target="_blank" rel="noopener">Контур.Толк</a></td><td>Платформа видеовстреч с ИИ-функциями на соответствующих тарифах: расшифровка встречи и краткий пересказ. Удобна для фиксации итогов педсовета, методического совещания или консультации. Возможности зависят от тарифа.</td><td class="rate">3/5 — полезен, если встречи проходят онлайн; для обычного урока нужен не всем.<br/><span style="font-weight:400;color:#d9d2c7;">(kontur.ru)</span></td></tr><tr><td class="svc"><a href="https://veruna.io" target="_blank" rel="noopener">Порфирьевич</a></td><td>Узкий литературный инструмент: продолжает заданный фрагмент художественного текста, иногда с необычными сюжетными поворотами. Подходит для демонстрации генерации текста и творческих упражнений. Текущую доступность сервиса перед использованием стоит проверить: сведения о нём могут быть устаревшими.</td><td class="rate">2/5 — нишевой инструмент для уроков литературы и творческих заданий.<br/><span style="font-weight:400;color:#d9d2c7;">(veruna.io)</span></td></tr></table></div>
+</div>
+</div>
+<div class="lib-panel gold">
+<div class="lib-head" onclick="toggleLib(this)">
+<h3>Как выбрать сервис</h3>
+<span class="lib-btn">Развернуть +</span>
+</div>
+<div class="lib-body">
+<div class="lib-table-wrap"><table class="lib"><tr><th>Задача</th><th>Что открыть</th></tr><tr><td>Нужно быстро придумать объяснение или задание</td><td class="svc"><a href="https://alice.yandex.ru" target="_blank" rel="noopener">Алиса AI</a> или <a href="https://giga.chat" target="_blank" rel="noopener">GigaChat</a></td></tr><tr><td>Нужны рабочие листы, тесты и материалы по классу</td><td class="svc"><a href="https://obuchai.com" target="_blank" rel="noopener">Обучай</a> или <a href="https://neuroom.ru" target="_blank" rel="noopener">Нейрум</a></td></tr><tr><td>Нужны школьные сценарии и документы</td><td class="svc"><a href="https://infourok.ru" target="_blank" rel="noopener">ИИ-ассистент Инфоурока</a></td></tr><tr><td>Работаете в экосистеме Яндекс Учебника</td><td class="svc"><a href="https://education.yandex.ru" target="_blank" rel="noopener">Помощник учителя AI</a></td></tr><tr><td>Нужно зафиксировать итоги онлайн-встречи</td><td class="svc"><a href="https://kontur.ru/tolk" target="_blank" rel="noopener">Контур.Толк</a> на тарифе, где включены ИИ-артефакты</td></tr></table></div>
+<p class="hint">Во всех случаях воспринимайте результат как черновик: проверьте факты, формулировки, ответы и соответствие вашей программе, прежде чем давать материал ученикам.</p>
+</div>
+</div>
+</section>
 
-            </div>
-        </section>
-
-        <section style="margin-top:2rem;">
-            <h2>Для методической работы</h2>
-            <div class="prompts-grid">
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: самоанализ урока</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Помоги провести самоанализ урока: сильные стороны, зоны роста, идеи на следующий урок.</p>
-                    <div class="prompt-text">Проведи самоанализ урока по теме «[тема]», [класс], длительность 45 минут. Выдели 3 сильные стороны, 3 зоны роста и 3 идеи на следующий урок. Формат: маркированные списки. Тон: конструктивный, без самокритики.</div>
-                </article>
-
-                <article class="prompt-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="prompt-title">Промт: тезисы для выступления</span>
-                        <button class="copy-btn" onclick="copyText(this)">Копировать</button>
-                    </div>
-                    <p class="prompt-desc">Подготовь тезисы для методического выступления на 5-7 минут.</p>
-                    <div class="prompt-text">Подготовь тезисы для методического выступления (5-7 минут) на тему «[тема/опыт]» для коллег-учителей. Включи 3 ключевых идеи, 2 примера из практики, 1 вывод. Формат: короткие пункты по 1-2 строки.</div>
-                </article>
-            </div>
-        </section>
-    </main>
+</main>
 
     <footer>
         <p>Коллекция промтов для педагогов • Чертолыс Л.А. • 2026 г.</p>
     </footer>
 
+
+    <div class="motiv m1">Ваше терпение важнее любой программы</div>
+    <div class="motiv m3">Каждый урок — ваш вклад в будущее</div>
+    <div class="motiv m4">Лучший урок — тот, на котором улыбнулись</div>
     <script>
         function copyText(btn) {
-            const text = btn.parentElement.nextElementSibling.nextElementSibling;
+            const card = btn.closest('article') || btn.parentElement.parentElement;
+            const text = card.querySelector('.prompt-text, .copy-text');
+            if (!text) return;
             const str = text.innerText;
             navigator.clipboard.writeText(str).then(() => {
                 const originalText = btn.innerText;
@@ -252,6 +465,21 @@
                 setTimeout(() => btn.innerText = originalText, 2000);
             });
         }
+
+        function toggleLib(head) {
+            const panel = head.parentElement;
+            const wasOpen = panel.classList.contains('open');
+            document.querySelectorAll('.lib-panel.open').forEach(p => {
+                p.classList.remove('open');
+                const b = p.querySelector('.lib-btn');
+                if (b) b.textContent = 'Развернуть +';
+            });
+            if (!wasOpen) {
+                panel.classList.add('open');
+                head.querySelector('.lib-btn').textContent = 'Свернуть −';
+            }
+        }
     </script>
+    <img src="5.png" alt="" class="corner-img"/>
 </body>
 </html>
